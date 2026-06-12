@@ -1,26 +1,204 @@
+/* ============================================================
+   The Scribe — Design system foundation (Tailwind v4)
+   src/app/globals.css
+
+   Direction: a writing room, not a dashboard. Vellum and
+   iron-gall ink, one oxblood accent from illuminated
+   manuscript tradition, gold reserved exclusively for the
+   Scribe's marginalia. The manuscript page is the hero.
+   ============================================================ */
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* ---------- Color: vellum + iron-gall ink ---------- */
+  /* Surfaces, lightest to deepest */
+  --color-vellum-50:  #FBF8F1;   /* the page itself */
+  --color-vellum-100: #F5F0E4;   /* app background */
+  --color-vellum-200: #ECE4D2;   /* raised panels, margin column */
+  --color-vellum-300: #DDD2B9;   /* borders, dividers */
+  --color-vellum-400: #C7B894;   /* strong borders, hover states */
+
+  /* Ink, for text. Iron-gall ink is warm, never pure black. */
+  --color-ink-900: #211A10;      /* display headings */
+  --color-ink-800: #332A1C;      /* manuscript body */
+  --color-ink-600: #5C4F38;      /* UI body text */
+  --color-ink-400: #8C7C5E;      /* secondary, captions */
+  --color-ink-300: #AB9D80;      /* placeholders, disabled */
+
+  /* Oxblood: the single product accent. Buttons, links, drop caps. */
+  --color-oxblood-700: #5E1F1B;
+  --color-oxblood-600: #7A2E2A;  /* primary actions */
+  --color-oxblood-500: #93423B;  /* hover */
+  --color-oxblood-100: #F2E2DF;  /* tinted fills */
+
+  /* Gold: ONLY for the Scribe. Marginalia, annotations,
+     highlights the assistant makes. Never on user actions —
+     the constraint is the identity. */
+  --color-gilt-600: #9A742B;
+  --color-gilt-500: #C9A45C;
+  --color-gilt-100: #F3E9D2;
+
+  /* Semantic */
+  --color-bless-600: #4E6B3A;    /* success — olive, stays in palette */
+  --color-warn-600:  #9A6A21;
+  --color-error-600: #8C2F23;
+
+  /* ---------- Type ---------- */
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-manuscript: "Newsreader", ui-serif, Georgia, serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale — 1.25 ratio, anchored to 17px manuscript body */
+  --text-manuscript: 1.0625rem;        /* 17px — long-form reading size */
+  --text-manuscript--line-height: 1.85;
+
+  /* ---------- Shape & depth ---------- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --shadow-page: 0 1px 2px rgb(33 26 16 / 0.06), 0 8px 32px rgb(33 26 16 / 0.07);
+  --shadow-margin-note: 0 1px 3px rgb(33 26 16 / 0.08);
+
+  /* ---------- Motion ---------- */
+  --ease-quill: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ============================================================
+   Base
+   ============================================================ */
+@layer base {
+  html {
+    background: var(--color-vellum-100);
+    color: var(--color-ink-600);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  ::selection {
+    background: var(--color-gilt-100);
+    color: var(--color-ink-900);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-oxblood-600);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================================
+   Manuscript typography — the product's hero surface.
+   Applied to rendered chapter content via .manuscript.
+   ============================================================ */
+@layer components {
+  .manuscript {
+    font-family: var(--font-manuscript);
+    font-size: var(--text-manuscript);
+    line-height: 1.85;
+    color: var(--color-ink-800);
+    max-width: 38rem;               /* ~66ch — classic measure */
+  }
+
+ .manuscript p { margin-bottom: 1.15em; }
+
+  /* Drop cap on the first paragraph of a chapter */
+  .manuscript > p:first-of-type::first-letter {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 3.4em;
+    line-height: 0.82;
+    float: left;
+    padding: 0.06em 0.12em 0 0;
+    color: var(--color-oxblood-600);
+  }
+
+  /* Scripture citation block */
+  .manuscript blockquote {
+    border-left: 2px solid var(--color-gilt-500);
+    background: var(--color-gilt-100);
+    padding: 0.75rem 1.1rem;
+    margin: 1.4rem 0;
+    font-style: italic;
+    color: var(--color-ink-800);
+  }
+  .manuscript blockquote cite {
+    display: block;
+    margin-top: 0.4rem;
+    font-style: normal;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--color-ink-400);
+  }
+
+  /* Prophetic declaration — set apart, centered, small caps feel */
+  .manuscript .declaration {
+    text-align: center;
+    font-style: italic;
+    margin: 1.6rem 2rem;
+    color: var(--color-ink-900);
+  }
+
+  /* Chapter eyebrow + title */
+  .chapter-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-400);
+  }
+  .chapter-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    line-height: 1.25;
+    color: var(--color-ink-900);
+    letter-spacing: -0.01em;
+  }
+
+  /* Text the Scribe is referencing — gold dashed anchor */
+  .scribe-anchor {
+    background: var(--color-gilt-100);
+    border-bottom: 1px dashed var(--color-gilt-500);
+    cursor: pointer;
+    transition: background 160ms var(--ease-quill);
+  }
+  .scribe-anchor:hover { background: var(--color-gilt-500); color: var(--color-ink-900); }
+
+  /* Margin note card */
+  .margin-note {
+    background: var(--color-vellum-50);
+    border: 1px solid var(--color-vellum-300);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-margin-note);
+    padding: 0.7rem 0.85rem;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--color-ink-600);
+  }
+  .margin-note .scribe-byline {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+    font-size: 0.72rem;
+    color: var(--color-gilt-600);
+  }
+}
+/* Panel items rising in as the Scribe takes notes */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@layer utilities {
+  .animate-rise { animation: rise 420ms var(--ease-quill) both; }
 }
