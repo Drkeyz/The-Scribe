@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { StudioNav } from "@/components/ui/StudioNav";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { createBook } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -164,12 +165,12 @@ export default async function BooksPage() {
                 </Field>
               </div>
 
-              <button
-                type="submit"
-                className="mt-7 w-full rounded-xl bg-oxblood-500 px-4 py-3.5 text-[15px] font-medium text-vellum-50 transition-colors hover:bg-oxblood-600"
+              <SubmitButton
+                pendingLabel="Handing it to the Scribe…"
+                className="mt-7 w-full rounded-xl bg-oxblood-500 px-4 py-3.5 text-[15px] font-medium text-vellum-50 transition-colors hover:bg-oxblood-600 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Hand it to the Scribe →
-              </button>
+              </SubmitButton>
             </form>
           </aside>
         </div>
