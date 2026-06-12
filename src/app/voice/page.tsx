@@ -5,6 +5,8 @@ import {
   RemoveButton,
   WritingSampleEditor,
 } from "@/components/voice/VoiceControls";
+import { savePenName } from "@/app/voice/actions";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -285,6 +287,38 @@ export default async function VoicePage() {
                 )}
               </div>
             )}
+
+            {/* ============ Pen name ============ */}
+            <Section
+              title="Pen name"
+              note="How your name appears on title pages and across the studio"
+            >
+              <form
+                action={savePenName}
+                className="flex max-w-md items-center gap-3"
+              >
+                <label htmlFor="pen_name" className="sr-only">
+                  Pen name
+                </label>
+                <input
+                  id="pen_name"
+                  name="pen_name"
+                  required
+                  maxLength={80}
+                  defaultValue={
+                    personRes.data?.pen_name ?? personRes.data?.full_name ?? ""
+                  }
+                  placeholder="Your name as it appears in print"
+                  className="flex-1 rounded-xl border border-vellum-300 bg-vellum-50 px-4 py-3 text-[15px] text-ink-900 placeholder:text-ink-300 focus:border-vellum-400"
+                />
+                <SubmitButton
+                  pendingLabel="Saving…"
+                  className="rounded-xl bg-oxblood-500 px-5 py-3 text-sm font-medium text-vellum-50 transition-colors hover:bg-oxblood-600 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Save
+                </SubmitButton>
+              </form>
+            </Section>
 
             {/* ============ Writing sample ============ */}
             <Section

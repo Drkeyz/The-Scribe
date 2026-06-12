@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { StudioNav } from "@/components/ui/StudioNav";
 
@@ -25,7 +26,8 @@ export default async function StudioPage() {
     ]);
 
   const fullName =
-    personRes.data?.pen_name || personRes.data?.full_name || "friend";
+    personRes.data?.pen_name || personRes.data?.full_name || "";
+  if (!fullName) redirect("/welcome");
   const firstName = fullName.split(" ")[0];
   const completeness = profileRes.data?.completeness ?? 0;
   const calling = profileRes.data?.calling_summary ?? null;
