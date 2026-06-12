@@ -50,7 +50,8 @@ export async function GET(
   const author =
     personRes.data?.pen_name || personRes.data?.full_name || "";
   const chapters = (chaptersRes.data ?? []).filter(
-    (c) => (c.content ?? "").trim() !== ""
+    (c: { number: number; title: string; content: string | null; status: string }) =>
+      (c.content ?? "").trim() !== ""
   );
 
   const children: Paragraph[] = [
@@ -116,7 +117,7 @@ export async function GET(
 
     const blocks = (chapter.content ?? "")
       .split(/\n\s*\n/)
-      .filter((b) => b.trim() !== "");
+      .filter((b: string) => b.trim() !== "");
 
     for (const block of blocks) {
       const trimmed = block.trim();
@@ -135,9 +136,9 @@ export async function GET(
       if (trimmed.startsWith("> ")) {
         const lines = trimmed
           .split("\n")
-          .map((l) => l.replace(/^>\s?/, "").trim())
+          .map((l: string) => l.replace(/^>\s?/, "").trim())
           .filter(Boolean);
-        const citeIdx = lines.findIndex((l) => l.startsWith("—"));
+        const citeIdx = lines.findIndex((l: string) => l.startsWith("—"));
         const quote = (citeIdx === -1 ? lines : lines.slice(0, citeIdx)).join(" ");
         const cite = citeIdx === -1 ? null : lines[citeIdx];
 
@@ -178,7 +179,7 @@ export async function GET(
               new TextRun({
                 text: trimmed
                   .split("\n")
-                  .map((l) => l.replace(/^::\s?/, ""))
+                  .map((l: string) => l.replace(/^::\s?/, ""))
                   .join(" "),
                 italics: true,
                 font: "Georgia",
