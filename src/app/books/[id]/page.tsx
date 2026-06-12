@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { StudioNav } from "@/components/ui/StudioNav";
 import { OutlineGenerator } from "@/components/books/OutlineGenerator";
+import { DeleteBookButton } from "@/components/books/DeleteBookButton";
 import { formatTitle } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -72,14 +73,17 @@ export default async function BookPage(props: {
               <span>{totalWords.toLocaleString()} words drafted</span>
             )}
           </div>
-          {totalWords > 0 && (
-            <a
-              href={`/api/books/${book.id}/export`}
-              className="mt-5 inline-block rounded-lg border border-vellum-300 px-4 py-2 text-sm text-ink-600 transition-colors hover:border-vellum-400 hover:text-ink-900"
-            >
-              ↓ Export manuscript (.docx)
-            </a>
-          )}
+          <div className="mt-5 flex flex-wrap items-center gap-5">
+            {totalWords > 0 && (
+              <a
+                href={`/api/books/${book.id}/export`}
+                className="inline-block rounded-lg border border-vellum-300 px-4 py-2 text-sm text-ink-600 transition-colors hover:border-vellum-400 hover:text-ink-900"
+              >
+                ↓ Export manuscript (.docx)
+              </a>
+            )}
+            <DeleteBookButton bookId={book.id} title={book.title} />
+          </div>
         </header>
 
         {!hasOutline ? (
